@@ -9,6 +9,7 @@ import json
 @api_view(['GET'])
 def get_quantity_view(request):
     '''Serves quantity/ requests and returns the quantity of records in the table'''
+
     quantity = get_quantity()[0]
     return Response(data={'Records quantity:': str(quantity)})
 
@@ -16,5 +17,6 @@ def get_quantity_view(request):
 @api_view(['GET'])
 def get_record_by_id_view(request, id):
     '''Serves by_id/id=id requests and returns the record with given id or record-not-found error'''
+    
     result = get_record_by_id(id)
     return Response(data=result)

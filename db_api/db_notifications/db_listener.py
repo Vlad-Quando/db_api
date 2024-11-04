@@ -22,17 +22,23 @@ def listen_notifications():
         'host': 'localhost'
     }
 
-    connection = psycopg2.connect(**pg_connection_dict)
-    connection.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)
+    try:
+        connection = psycopg2.connect(**pg_connection_dict)
+        connection.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)
 
-    cursor = connection.cursor()
-    cursor.execute("LISTEN notifications;")
+        cursor = connection.cursor()
+        cursor.execute("LISTEN notifications;")
+    except Exception as e:
+        print('Error while establishing a notification database connection:', e)
 
-    while True:
-        connection.poll()
-        while connection.notifies:
-            notify = connection.notifies.pop(0)
-            notification.send(sender=None, message=notify.payload)
+    if connection:
+        while True:
+            connection.poll()
+            while connection.notifies:
+                notify = connection.notifies.pop(0)
+                notification.send(sender=None, message=notify.payload)
+    else:
+        return
 
         
 def start_notification_listener():

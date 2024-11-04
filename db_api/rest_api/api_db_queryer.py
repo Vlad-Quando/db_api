@@ -17,7 +17,10 @@ def set_connection() -> None:
         'host': 'localhost'
     }
 
-    connection = psycopg2.connect(**pg_connection_dict)
+    try:
+        connection = psycopg2.connect(**pg_connection_dict)
+    except Exception as e:
+        print('Error while establishing a rest api database connection:', e)
 
 
 def get_quantity() -> dict|str:
